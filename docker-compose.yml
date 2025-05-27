@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - "8883:8883"
+      - "8083:8083"
+      - "8084:8084"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./certbot/conf:/etc/letsencrypt
+      - ./auth:/mosquitto/auth
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/dns-cloudflare
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/cloudflare.ini:/cloudflare.ini:ro
+    entrypoint: /bin/sh -c
+    command: >
+      "certbot certonly
+      --dns-cloudflare
+      --dns-cloudflare-credentials /cloudflare.ini
+      --dns-cloudflare-propagation-seconds 30
+      --non-interactive
+      --agree-tos
+      --email dein@email.tld
+      -d mqtt.example.com"
+
+  watchdog:
+    image: alpine
+    container_name: certbot-watchdog
+    depends_on:
+      - certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/cloudflare.ini:/cloudflare.ini:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./watchdog/renew-and-reload.sh:/renew-and-reload.sh
+    entrypoint: /bin/sh -c
+    command: >
+      "chmod +x /renew-and-reload.sh && while true; do /renew-and-reload.sh && sleep 12h; done"
