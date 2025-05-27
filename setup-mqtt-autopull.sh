@@ -30,7 +30,7 @@ if [ ! -f auth/passwd ]; then
   echo "⚙️  Lege Mosquitto-Benutzer an:"
   read -p "Benutzername: " USERNAME
   read -p "Passwort: " PASSWORD
-  mosquitto_passwd -b auth/passwd "$USERNAME" "$PASSWORD"
+  mosquitto_passwd -b "$TARGET_DIR/auth/passwd" "$USERNAME" "$PASSWORD"
 fi
 
 echo "🔐 Rufe initiales Let's Encrypt-Zertifikat ab (falls noch nicht vorhanden)..."
