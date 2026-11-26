@@ -1,33 +1,24 @@
-# MQTT Docker mit Let's Encrypt (Cloudflare DNS Challenge)
+<p align="center"><img src="docs/logo.png" width="96" alt="Logo"></p>
+<h1 align="center">Rosenweg MQTT-Broker</h1>
+<p align="center">Mosquitto-Broker mit TLS und Let's-Encrypt-Zertifikaten – die Nachrichten-Drehscheibe für Zähler, Sensoren und Anzeigen im Rosenweg.</p>
+<p align="center"><a href="docs/entwickeln.md#schnellstart">Einrichten</a> · <a href="docs/entwickeln.md">Für Entwickler</a></p>
 
-## Features
+## Was drin ist
 
-- Mosquitto mit TLS (8883)
-- WebSocket über TLS (8084)
-- WebSocket ohne TLS (8083), anonym, nur Leserechte auf `public/#`
-- Let's Encrypt Zertifikate über Cloudflare DNS
-- Automatische Erneuerung & Mosquitto-Neustart
+- Mosquitto als Docker-Compose-Dienst, verschlüsselt (MQTT über TLS und WebSocket über TLS).
+- Ein offener, nur lesender WebSocket-Zugang für öffentliche Werte (`public/#`).
+- Zertifikate von Let's Encrypt, automatisch erneuert, Broker danach neu gestartet.
+- Ein Einrichtungs-Skript, das alles auf einem neuen Rechner aufsetzt und aktuell hält.
 
-## Schnellstart
+## Läuft auf
 
-Auf dem Zielrechner (als root):
+Linux mit Docker.
 
-```bash
-curl -fsSLO https://raw.githubusercontent.com/Rosenweg/MQTT-Broker/main/setup-mqtt-autopull.sh
-bash setup-mqtt-autopull.sh
-```
+## Entwickeln
 
-Das Skript klont bzw. aktualisiert dieses Repo nach `/opt/docker/mqtt`, fragt beim
-ersten Mal den Cloudflare-API-Token (`certbot/cloudflare.ini`) sowie einen
-Mosquitto-Benutzer (`auth/passwd`) ab, holt das erste Zertifikat und startet
-`docker compose up -d`. Von Hand geht es auch so:
+Konfiguration in `mosquitto/config/`, Dienste in `docker-compose.yml`.
+Ports, Schnellstart und Zertifikats-Erneuerung stehen in [docs/entwickeln.md](docs/entwickeln.md).
 
-```bash
-git clone https://github.com/Rosenweg/MQTT-Broker.git /opt/docker/mqtt
-cd /opt/docker/mqtt
-# certbot/cloudflare.ini und die Domain anpassen, dann:
-docker compose up -d
-```
+## Lizenz
 
-`watchdog/renew-and-reload.sh` erneuert die Zertifikate (certbot, Cloudflare-DNS)
-und startet Mosquitto danach neu.
+Keine Lizenz hinterlegt – alle Rechte vorbehalten.
