@@ -10,10 +10,24 @@
 
 ## Schnellstart
 
-```bash
-git clone https://github.com/deinuser/mqtt-docker-letsencrypt.git
-cd mqtt-docker-letsencrypt
+Auf dem Zielrechner (als root):
 
-# Passe cloudflare.ini und deine Domain an, dann:
-docker-compose up -d
+```bash
+curl -fsSLO https://raw.githubusercontent.com/Rosenweg/MQTT-Broker/main/setup-mqtt-autopull.sh
+bash setup-mqtt-autopull.sh
 ```
+
+Das Skript klont bzw. aktualisiert dieses Repo nach `/opt/docker/mqtt`, fragt beim
+ersten Mal den Cloudflare-API-Token (`certbot/cloudflare.ini`) sowie einen
+Mosquitto-Benutzer (`auth/passwd`) ab, holt das erste Zertifikat und startet
+`docker compose up -d`. Von Hand geht es auch so:
+
+```bash
+git clone https://github.com/Rosenweg/MQTT-Broker.git /opt/docker/mqtt
+cd /opt/docker/mqtt
+# certbot/cloudflare.ini und die Domain anpassen, dann:
+docker compose up -d
+```
+
+`watchdog/renew-and-reload.sh` erneuert die Zertifikate (certbot, Cloudflare-DNS)
+und startet Mosquitto danach neu.
