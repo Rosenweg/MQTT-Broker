@@ -105,4 +105,4 @@ Mehr: [docs/entwickeln.md](docs/entwickeln.md).
 
 ## Lizenz
 
-Keine Lizenz hinterlegt – alle Rechte vorbehalten.
+GPL-3.0-or-later, siehe [LICENSE](LICENSE).
